@@ -1,21 +1,19 @@
-package org.coner.timer.test
+package org.coner.timer.input.mapper
 
-import org.coner.timer.input.FinishTriggerElapsedTimeOnly
-import org.coner.timer.input.JACTimerInputReader
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
 import kotlin.test.assertEquals
 
-class JACTimerInputReaderTest {
+class JACTimerInputMapperTest {
 
     val prefix = "\uFFFD"
 
-    lateinit var reader: JACTimerInputReader
+    lateinit var reader: JACTimerInputMapper
 
     @Before
     fun before() {
-        reader = JACTimerInputReader()
+        reader = JACTimerInputMapper()
     }
 
     @Test
@@ -23,7 +21,7 @@ class JACTimerInputReaderTest {
         val rawTimerInput = "${prefix}654.321"
         val expected = FinishTriggerElapsedTimeOnly(BigDecimal.valueOf(123456, 3))
 
-        val actual = reader.read(rawTimerInput)
+        val actual = reader.map(rawTimerInput)
 
         assertEquals(expected, actual)
     }
