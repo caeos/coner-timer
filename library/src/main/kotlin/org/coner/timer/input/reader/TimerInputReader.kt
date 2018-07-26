@@ -2,7 +2,7 @@ package org.coner.timer.input.reader
 
 import java.util.concurrent.atomic.AtomicBoolean
 
-abstract class TimerInputReader<C, I>(val config: C) {
+abstract class TimerInputReader<C, RTI>(val config: C) {
 
     private var started = AtomicBoolean(false)
     private var consumed = AtomicBoolean(false)
@@ -19,7 +19,7 @@ abstract class TimerInputReader<C, I>(val config: C) {
         }
     }
 
-    abstract fun read(): I?
+    abstract fun read(): RTI?
 
     fun stop() {
         synchronized(this) {

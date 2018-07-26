@@ -1,6 +1,7 @@
 package org.coner.timer.input.mapper
 
 import mu.KotlinLogging
+import org.coner.timer.input.FinishTriggerElapsedTimeOnly
 import java.math.MathContext
 
 private val logger = KotlinLogging.logger {  }

@@ -1,4 +1,4 @@
-package org.coner.timer.input.mapper
+package org.coner.timer.input
 
 import java.math.BigDecimal
 
