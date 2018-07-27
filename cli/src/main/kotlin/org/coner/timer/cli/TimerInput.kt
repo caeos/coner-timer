@@ -11,13 +11,18 @@ import org.coner.timer.input.mapper.JACTimerInputMapper
 import org.coner.timer.input.reader.InputStreamTimerInputReader
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
+import purejavacomm.CommPortIdentifier
 import java.io.File
 
-class TimerInput : CliktCommand() {
+class Timer : CliktCommand() {
     override fun run() = Unit
 }
 
-class File : CliktCommand() {
+class TimerFile : CliktCommand(name = "file") {
+    override fun run() = Unit
+}
+
+class TimerFileInput : CliktCommand(name = "input") {
     val inputFile: File by argument().file(exists = true, readable = true, folderOkay = false)
     val mapper: String by argument().choice("jacircuits")
     val rawInputLogFile: File by argument().file(exists = true, folderOkay = false, writable = true)
@@ -47,6 +52,24 @@ class File : CliktCommand() {
     }
 }
 
-fun main(args: Array<String>) = TimerInput()
-        .subcommands(File())
+class TimerCommPort : CliktCommand(name = "comm-port") {
+    override fun run() = Unit
+}
+
+class TimerCommPortList : CliktCommand(name = "list") {
+    override fun run() {
+        val ports = CommPortIdentifier.getPortIdentifiers().toList().sortedBy(CommPortIdentifier::getName)
+        for (port in ports) {
+            TermUi.echo("Comm port: { name: ${port.name} }")
+        }
+    }
+}
+
+fun main(args: Array<String>) = Timer()
+        .subcommands(
+                TimerFile()
+                        .subcommands(TimerFileInput()),
+                TimerCommPort()
+                        .subcommands(TimerCommPortList())
+        )
         .main(args)
