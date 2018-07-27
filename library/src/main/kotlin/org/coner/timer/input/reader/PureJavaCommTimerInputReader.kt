@@ -15,9 +15,7 @@ class PureJavaCommTimerInputReader(config: Config) : TimerInputReader<PureJavaCo
         buffer = commPort.inputStream.bufferedReader()
     }
 
-    override fun read(): String {
-        return buffer.readLine()
-    }
+    override fun read() = buffer.readLine()
 
     override val onStop = {
         buffer.close()

@@ -8,8 +8,9 @@ import kotlin.concurrent.thread
 
 class Timer<RTI, I>(
         val reader: TimerInputReader<*, RTI>,
+        val rawInputWriter: TimerOutputWriter<RTI>? = null,
         val mapper: TimerInputMapper<RTI, out I>,
-        val writer: TimerOutputWriter<I>
+        val mappedInputWriter: TimerOutputWriter<I>
 ) {
 
     private val started = AtomicBoolean(false)
@@ -31,12 +32,13 @@ class Timer<RTI, I>(
                 Thread.sleep(100)
                 continue
             }
-            val input = mapper.map(rawTimerInput)
-            if (input == null) {
+            rawInputWriter?.write(rawTimerInput)
+            val mappedInput = mapper.map(rawTimerInput)
+            if (mappedInput == null) {
                 Thread.sleep(100)
                 continue
             }
-            writer.write(input)
+            mappedInputWriter.write(mappedInput)
         }
     }
 

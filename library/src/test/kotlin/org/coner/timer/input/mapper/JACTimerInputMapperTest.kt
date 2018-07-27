@@ -1,6 +1,6 @@
 package org.coner.timer.input.mapper
 
-import org.coner.timer.input.FinishTriggerElapsedTimeOnly
+import org.coner.timer.model.FinishTriggerElapsedTimeOnly
 import org.junit.Before
 import org.junit.Test
 import java.math.BigDecimal
