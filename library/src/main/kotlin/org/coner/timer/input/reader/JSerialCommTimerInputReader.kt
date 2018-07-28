@@ -18,6 +18,7 @@ class JSerialCommTimerInputReader(config: Config) : TimerInputReader<JSerialComm
     override fun read() = buffer.readLine()
 
     override val onStop = {
+        buffer.close()
         val success = commPort.closePort()
         require(success) { "Failed to close port: ${config.port}"}
     }
