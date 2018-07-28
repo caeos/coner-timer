@@ -13,6 +13,7 @@
 
     <properties>
         <purejavacomm.version>1.0.2.RELEASE</purejavacomm.version>
+        <jserialcomm.version>2.0.3</jserialcomm.version>
     </properties>
 
     <dependencies>
@@ -42,6 +43,11 @@
             <groupId>com.github.purejavacomm</groupId>
             <artifactId>purejavacomm</artifactId>
             <version>${purejavacomm.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fazecast</groupId>
+            <artifactId>jSerialComm</artifactId>
+            <version>${jserialcomm.version}</version>
         </dependency>
     </dependencies>
 
