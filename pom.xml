@@ -22,4 +22,23 @@
         <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <name>Bintray jcenter</name>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+        <repository>
+            <id>jfrog-oss-snapshots</id>
+            <name>JFrog OSS Artifactory Snapshots</name>
+            <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
 </project>
