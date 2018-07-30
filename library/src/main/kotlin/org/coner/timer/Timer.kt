@@ -27,18 +27,23 @@ class Timer<RTI, I>(
 
     private fun loop() {
         while (started.get()) {
-            val rawTimerInput = reader.read()
-            if (rawTimerInput == null) {
+            try {
+                val rawTimerInput = reader.read()
+                if (rawTimerInput == null) {
+                    Thread.sleep(100)
+                    continue
+                }
+                rawInputWriter?.write(rawTimerInput)
+                val mappedInput = mapper.map(rawTimerInput)
+                if (mappedInput == null) {
+                    Thread.sleep(100)
+                    continue
+                }
+                mappedInputWriter.write(mappedInput)
+            } catch (t: Throwable) {
+                t.printStackTrace()
                 Thread.sleep(100)
-                continue
             }
-            rawInputWriter?.write(rawTimerInput)
-            val mappedInput = mapper.map(rawTimerInput)
-            if (mappedInput == null) {
-                Thread.sleep(100)
-                continue
-            }
-            mappedInputWriter.write(mappedInput)
         }
     }
 

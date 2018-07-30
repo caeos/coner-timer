@@ -49,6 +49,12 @@
             <artifactId>jSerialComm</artifactId>
             <version>${jserialcomm.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.coner</groupId>
+            <artifactId>coner-core-client-java</artifactId>
+            <version>${coner-core.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

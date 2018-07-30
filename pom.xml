@@ -14,6 +14,7 @@
     </modules>
 
     <properties>
+        <coner-core.version>0.1.25</coner-core.version>
         <kotlin.version>1.2.51</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <kotlin-logging.version>1.5.4</kotlin-logging.version>

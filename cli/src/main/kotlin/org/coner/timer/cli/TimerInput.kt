@@ -9,11 +9,15 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
+import org.coner.core.client.ApiClient
+import org.coner.core.client.api.EventsApi
 import org.coner.timer.Timer
 import org.coner.timer.input.mapper.JACTimerInputMapper
 import org.coner.timer.input.reader.InputStreamTimerInputReader
 import org.coner.timer.input.reader.JSerialCommTimerInputReader
 import org.coner.timer.input.reader.PureJavaCommTimerInputReader
+import org.coner.timer.model.FinishTriggerElapsedTimeOnly
+import org.coner.timer.output.ConerCoreRunOutputWriter
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
 import purejavacomm.CommPortIdentifier
@@ -31,20 +35,28 @@ class TimerFileInput : CliktCommand(name = "input") {
     val inputFile: File by argument().file(exists = true, readable = true, folderOkay = false)
     val mapper: String by mapperOption()
     val rawInputLogFile: File by rawInputLogFileArgument()
+    val mappedInputWriter: String by mappedInputWriterArgument()
+    val conerCoreServiceUrl by option()
+    val conerCoreEventId by option()
 
     override fun run() {
         val config = InputStreamTimerInputReader.Config(inputFile.inputStream())
         val reader = InputStreamTimerInputReader(config)
+        val rawInputWriter = FileAppendingOutputWriter(rawInputLogFile)
         val mapper = when (mapper) {
             "jacircuits" -> JACTimerInputMapper()
             else -> throw IllegalStateException()
         }
-        val rawInputWriter = FileAppendingOutputWriter(rawInputLogFile)
+        val mappedInputWriter = when(mappedInputWriter) {
+            "println" -> PrintlnTimerOutputWriter<FinishTriggerElapsedTimeOnly>()
+            "coner-core-run" -> ConerCoreRunOutputWriter(buildConerCoreEventsApi(conerCoreServiceUrl!!), conerCoreEventId!!)
+            else -> throw IllegalStateException()
+        }
         val timer = Timer(
                 reader = reader,
                 rawInputWriter = rawInputWriter,
                 mapper = mapper,
-                mappedInputWriter = PrintlnTimerOutputWriter()
+                mappedInputWriter = mappedInputWriter
         )
         runTimer(timer)
     }
@@ -60,6 +72,9 @@ class TimerCommPortInput : CliktCommand(name = "input") {
             .choice(*CommPortIdentifier.getPortIdentifiers().toList().map { it.name }.toTypedArray())
     val mapper: String by mapperOption()
     val rawInputLogFile: File by rawInputLogFileArgument()
+    val mappedInputWriter: String by mappedInputWriterArgument()
+    val conerCoreServiceUrl by option()
+    val conerCoreEventId by option()
 
     override fun run() {
         val reader = when (serialPortLibrary) {
@@ -77,11 +92,16 @@ class TimerCommPortInput : CliktCommand(name = "input") {
             "jacircuits" -> JACTimerInputMapper()
             else -> throw IllegalStateException()
         }
+        val mappedInputWriter = when(mappedInputWriter) {
+            "println" -> PrintlnTimerOutputWriter<FinishTriggerElapsedTimeOnly>()
+            "coner-core-run" -> ConerCoreRunOutputWriter(buildConerCoreEventsApi(conerCoreServiceUrl!!), conerCoreEventId!!)
+            else -> throw IllegalStateException()
+        }
         val timer = Timer(
                 reader = reader,
                 rawInputWriter = rawInputWriter,
                 mapper = mapper,
-                mappedInputWriter = PrintlnTimerOutputWriter()
+                mappedInputWriter = mappedInputWriter
         )
         runTimer(timer)
     }
@@ -121,6 +141,12 @@ fun main(args: Array<String>) = Timer()
         )
         .main(args)
 
+private fun buildConerCoreEventsApi(conerCoreServiceUrl: String): EventsApi {
+    val apiClient = ApiClient()
+    apiClient.basePath = conerCoreServiceUrl
+    return EventsApi(apiClient)
+}
+
 private fun <RTI, I> runTimer(timer: Timer<RTI, I>) {
     TermUi.echo("Starting timer... ", trailingNewline = false)
     timer.start()
@@ -141,6 +167,8 @@ private fun CliktCommand.rawInputLogFileArgument() = argument().file(
 private fun CliktCommand.mapperOption() = option()
         .choice("jacircuits")
         .default("jacircuits")
+
+private fun CliktCommand.mappedInputWriterArgument() = argument().choice("println", "coner-core-run")
 
 private fun CliktCommand.serialPortLibraryOption() = option("--serial-port-library", "-l")
             .choice("purejavacomm", "jserialcomm")

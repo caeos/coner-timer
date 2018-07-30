@@ -1,7 +1,7 @@
 package org.coner.timer.output
 
-class PrintlnTimerOutputWriter : TimerOutputWriter<Any> {
-    override fun write(input: Any) {
+class PrintlnTimerOutputWriter<I> : TimerOutputWriter<I> {
+    override fun write(input: I) {
         println(input)
     }
 }
