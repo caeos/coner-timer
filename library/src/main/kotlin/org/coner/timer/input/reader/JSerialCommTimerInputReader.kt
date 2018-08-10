@@ -3,25 +3,23 @@ package org.coner.timer.input.reader
 import com.fazecast.jSerialComm.SerialPort
 import java.io.BufferedReader
 
-class JSerialCommTimerInputReader(config: Config) : TimerInputReader<JSerialCommTimerInputReader.Config, String>(config) {
+class JSerialCommTimerInputReader(val port: String) : TimerInputReader<String> {
 
     private lateinit var commPort: SerialPort
     private lateinit var buffer: BufferedReader
 
-    override val onStart = {
-        commPort = SerialPort.getCommPorts().first { it.systemPortName == config.port }
+    override fun onStart() {
+        commPort = SerialPort.getCommPorts().first { it.systemPortName == port }
         val success = commPort.openPort()
-        require(success) { "Failed to open port: ${config.port}"}
+        require(success) { "Failed to open port: ${port}"}
         buffer = commPort.inputStream.bufferedReader()
     }
 
     override fun read() = buffer.readLine()
 
-    override val onStop = {
+    override fun onStop() {
         buffer.close()
         val success = commPort.closePort()
-        require(success) { "Failed to close port: ${config.port}"}
+        require(success) { "Failed to close port: ${port}"}
     }
-
-    data class Config(val port: String)
 }

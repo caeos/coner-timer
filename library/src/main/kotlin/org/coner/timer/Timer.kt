@@ -1,13 +1,13 @@
 package org.coner.timer
 
 import org.coner.timer.input.mapper.TimerInputMapper
-import org.coner.timer.input.reader.TimerInputReader
+import org.coner.timer.input.reader.TimerInputReaderController
 import org.coner.timer.output.TimerOutputWriter
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 class Timer<RTI, I>(
-        val reader: TimerInputReader<*, RTI>,
+        val reader: TimerInputReaderController<RTI>,
         val rawInputWriter: TimerOutputWriter<RTI>? = null,
         val mapper: TimerInputMapper<RTI, out I>,
         val mappedInputWriter: TimerOutputWriter<I>
