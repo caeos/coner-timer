@@ -8,7 +8,7 @@ class JACTimerInputMapper : TimerInputMapper<String, FinishTriggerElapsedTimeOnl
     val roundingMode = MathContext(6)
 
     override fun map(rawTimerInput: String): FinishTriggerElapsedTimeOnly {
-        val lineReversedStripped = rawTimerInput.substring(1).reversed()
+        val lineReversedStripped = rawTimerInput.trim { !it.isDigit() }.reversed()
         if (lineReversedStripped.length != 6) {
             throw MappingException("Invalid JAC timer input: $rawTimerInput")
         }

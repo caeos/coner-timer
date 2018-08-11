@@ -14,13 +14,15 @@ class JACTimerInputMapperTest {
 
     lateinit var reader: JACTimerInputMapper
 
+    // TODO: refactor with parameterized tests
+
     @Before
     fun before() {
         reader = JACTimerInputMapper()
     }
 
     @Test
-    fun itShouldReadBasicInput() {
+    fun itShouldReadSixDigitInputWithControlCharacter() {
         val rawTimerInput = "${prefix}654321"
         val expected = FinishTriggerElapsedTimeOnly(BigDecimal.valueOf(123456, 3))
 
@@ -39,5 +41,35 @@ class JACTimerInputMapperTest {
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(MappingException::class.java)
         }
+    }
+
+    @Test
+    fun itShouldReadSixDigitInputWithoutPrefix() {
+        val rawTimerInput = "654321"
+        val expected = FinishTriggerElapsedTimeOnly(BigDecimal.valueOf(123456, 3))
+
+        val actual = reader.map(rawTimerInput)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun itShouldReadFiveDigitInputWithControlCharacter () {
+        val rawTimerInput = "${prefix}654320"
+        val expected = FinishTriggerElapsedTimeOnly(BigDecimal.valueOf(23456, 3))
+
+        val actual = reader.map(rawTimerInput)
+
+        assertEquals(expected, actual)
+    }
+
+    @Test
+    fun itShouldReadFiveDigitInputWithoutPrefix() {
+        val rawTimerInput = "654320"
+        val expected = FinishTriggerElapsedTimeOnly(BigDecimal.valueOf(23456, 3))
+
+        val actual = reader.map(rawTimerInput)
+
+        assertEquals(expected, actual)
     }
 }
