@@ -1,10 +1,10 @@
 package org.coner.timer.input.reader
 
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.concurrent.atomic.AtomicBoolean
@@ -25,11 +25,6 @@ class TimerInputReaderControllerTest {
         controller = TimerInputReaderController(started, consumed, reader)
     }
 
-    @After
-    fun after() {
-
-    }
-
     @Test
     fun whenStartFromStoppedItShouldFlagStarted() {
         controller.start()
@@ -44,6 +39,61 @@ class TimerInputReaderControllerTest {
 
         try {
             controller.start()
+            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+        } catch (t: Throwable) {
+            assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
+        }
+    }
+
+    @Test
+    fun whenStartFromConsumedItShouldThrow() {
+        consumed.set(true)
+
+        try {
+            controller.start()
+            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+        } catch (t: Throwable) {
+            assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
+        }
+    }
+
+    @Test
+    fun whenReadFromStartedItShouldRead() {
+        started.set(true)
+        every { reader.read() }.returns("foo")
+
+        val actual = controller.read()
+
+        assertThat(actual).isEqualTo("foo")
+        verify { reader.read() }
+    }
+
+    @Test
+    fun whenReadFromStoppedItShouldThrow() {
+        try {
+            controller.read()
+            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+        } catch (t: Throwable) {
+            assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
+        }
+        verify(exactly = 0) { reader.read() }
+    }
+
+    @Test
+    fun whenStopFromStartedItShouldStop() {
+        started.set(true)
+
+        controller.stop()
+
+        assertThat(consumed).isTrue
+        assertThat(started).isFalse
+        verify { reader.onStop() }
+    }
+
+    @Test
+    fun whenStopFromStoppedItShouldThrow() {
+        try {
+            controller.stop()
             failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(IllegalArgumentException::class.java)

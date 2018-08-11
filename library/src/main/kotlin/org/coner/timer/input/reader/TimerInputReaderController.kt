@@ -30,6 +30,7 @@ class TimerInputReaderController<RTI>(
             require(!consumed.get()) { "Already consumed. Once is enough." }
             reader.onStop()
             consumed.set(true)
+            started.set(false)
         }
     }
 }
