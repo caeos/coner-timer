@@ -21,6 +21,7 @@ import org.coner.timer.model.FinishTriggerElapsedTimeOnly
 import org.coner.timer.output.ConerCoreRunOutputWriter
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
+import org.coner.timer.util.JSerialCommWrapper
 import purejavacomm.CommPortIdentifier
 import java.io.File
 
@@ -84,6 +85,7 @@ class TimerCommPortInput : CliktCommand(name = "input") {
                     port = portName
             )
             "jserialcomm" -> JSerialCommTimerInputReader(
+                    jSerialComm = JSerialCommWrapper(),
                     port = portName
             )
             else -> throw IllegalStateException()
