@@ -22,6 +22,7 @@ import org.coner.timer.output.ConerCoreRunOutputWriter
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
 import org.coner.timer.util.JSerialCommWrapper
+import org.coner.timer.util.PureJavaCommWrapper
 import purejavacomm.CommPortIdentifier
 import java.io.File
 
@@ -81,6 +82,7 @@ class TimerCommPortInput : CliktCommand(name = "input") {
     override fun run() {
         val reader = when (serialPortLibrary) {
             "purejavacomm" -> PureJavaCommTimerInputReader(
+                    pureJavaComm = PureJavaCommWrapper(),
                     appName = "coner-timer-cli",
                     port = portName
             )
