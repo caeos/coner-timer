@@ -1,10 +1,11 @@
 package org.coner.timer.input.reader
 
+import org.coner.timer.util.PureJavaCommWrapper
 import purejavacomm.CommPort
-import purejavacomm.CommPortIdentifier
 import java.io.BufferedReader
 
 class PureJavaCommTimerInputReader(
+        val pureJavaComm: PureJavaCommWrapper,
         val appName: String,
         val port: String,
         val timeout: Int = 10000
@@ -14,7 +15,7 @@ class PureJavaCommTimerInputReader(
     private lateinit var buffer: BufferedReader
 
     override fun onStart() {
-        val identifier = CommPortIdentifier.getPortIdentifier(port)
+        val identifier = pureJavaComm.getCommPortIdentifier(port)
         commPort = identifier.open(appName, timeout)
         buffer = commPort.inputStream.bufferedReader()
     }
