@@ -16,10 +16,13 @@ import org.coner.timer.input.mapper.JACTimerInputMapper
 import org.coner.timer.input.reader.InputStreamTimerInputReader
 import org.coner.timer.input.reader.JSerialCommTimerInputReader
 import org.coner.timer.input.reader.PureJavaCommTimerInputReader
+import org.coner.timer.input.reader.TimerInputReaderController
 import org.coner.timer.model.FinishTriggerElapsedTimeOnly
 import org.coner.timer.output.ConerCoreRunOutputWriter
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
+import org.coner.timer.util.JSerialCommWrapper
+import org.coner.timer.util.PureJavaCommWrapper
 import purejavacomm.CommPortIdentifier
 import java.io.File
 
@@ -40,8 +43,8 @@ class TimerFileInput : CliktCommand(name = "input") {
     val conerCoreEventId by option()
 
     override fun run() {
-        val config = InputStreamTimerInputReader.Config(inputFile.inputStream())
-        val reader = InputStreamTimerInputReader(config)
+        val reader = InputStreamTimerInputReader(inputFile.inputStream())
+        val controller = TimerInputReaderController(reader = reader)
         val rawInputWriter = FileAppendingOutputWriter(rawInputLogFile)
         val mapper = when (mapper) {
             "jacircuits" -> JACTimerInputMapper()
@@ -53,7 +56,7 @@ class TimerFileInput : CliktCommand(name = "input") {
             else -> throw IllegalStateException()
         }
         val timer = Timer(
-                reader = reader,
+                controller = controller,
                 rawInputWriter = rawInputWriter,
                 mapper = mapper,
                 mappedInputWriter = mappedInputWriter
@@ -78,15 +81,18 @@ class TimerCommPortInput : CliktCommand(name = "input") {
 
     override fun run() {
         val reader = when (serialPortLibrary) {
-            "purejavacomm" -> PureJavaCommTimerInputReader(PureJavaCommTimerInputReader.Config(
+            "purejavacomm" -> PureJavaCommTimerInputReader(
+                    pureJavaComm = PureJavaCommWrapper(),
                     appName = "coner-timer-cli",
                     port = portName
-            ))
-            "jserialcomm" -> JSerialCommTimerInputReader(JSerialCommTimerInputReader.Config(
+            )
+            "jserialcomm" -> JSerialCommTimerInputReader(
+                    jSerialComm = JSerialCommWrapper(),
                     port = portName
-            ))
+            )
             else -> throw IllegalStateException()
         }
+        val readerController = TimerInputReaderController(reader = reader)
         val rawInputWriter = FileAppendingOutputWriter(rawInputLogFile)
         val mapper = when (mapper) {
             "jacircuits" -> JACTimerInputMapper()
@@ -98,7 +104,7 @@ class TimerCommPortInput : CliktCommand(name = "input") {
             else -> throw IllegalStateException()
         }
         val timer = Timer(
-                reader = reader,
+                controller = readerController,
                 rawInputWriter = rawInputWriter,
                 mapper = mapper,
                 mappedInputWriter = mappedInputWriter

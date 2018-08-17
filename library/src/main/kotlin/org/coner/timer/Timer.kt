@@ -1,13 +1,13 @@
 package org.coner.timer
 
 import org.coner.timer.input.mapper.TimerInputMapper
-import org.coner.timer.input.reader.TimerInputReader
+import org.coner.timer.input.reader.TimerInputReaderController
 import org.coner.timer.output.TimerOutputWriter
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.concurrent.thread
 
 class Timer<RTI, I>(
-        val reader: TimerInputReader<*, RTI>,
+        val controller: TimerInputReaderController<RTI>,
         val rawInputWriter: TimerOutputWriter<RTI>? = null,
         val mapper: TimerInputMapper<RTI, out I>,
         val mappedInputWriter: TimerOutputWriter<I>
@@ -20,7 +20,7 @@ class Timer<RTI, I>(
         synchronized(this) {
             require(!started.get()) { "This timer is already started" }
             started.set(true)
-            reader.start()
+            controller.start()
             loop = thread(name = "Timer") { loop() }
         }
     }
@@ -28,7 +28,7 @@ class Timer<RTI, I>(
     private fun loop() {
         while (started.get()) {
             try {
-                val rawTimerInput = reader.read()
+                val rawTimerInput = controller.read()
                 if (rawTimerInput == null) {
                     Thread.sleep(100)
                     continue
@@ -50,7 +50,7 @@ class Timer<RTI, I>(
     fun stop() {
         synchronized(this) {
             require(started.getAndSet(false)) { "This timer is already stopped"}
-            reader.stop()
+            controller.stop()
             loop = null
         }
     }
