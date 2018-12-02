@@ -8,15 +8,12 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.choice
 import com.github.ajalt.clikt.parameters.types.file
-import org.coner.core.client.ApiClient
-import org.coner.core.client.api.EventsApi
 import org.coner.timer.Timer
 import org.coner.timer.input.mapper.JACTimerInputMapper
 import org.coner.timer.input.reader.InputStreamTimerInputReader
 import org.coner.timer.input.reader.PureJavaCommTimerInputReader
 import org.coner.timer.input.reader.TimerInputReaderController
 import org.coner.timer.model.FinishTriggerElapsedTimeOnly
-import org.coner.timer.output.ConerCoreRunOutputWriter
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
 import org.coner.timer.util.PureJavaCommWrapper
@@ -36,8 +33,6 @@ class TimerFileInput : CliktCommand(name = "input") {
     val mapper: String by mapperOption()
     val rawInputLogFile: File by rawInputLogFileArgument()
     val mappedInputWriter: String by mappedInputWriterArgument()
-    val conerCoreServiceUrl by option()
-    val conerCoreEventId by option()
 
     override fun run() {
         val reader = InputStreamTimerInputReader(inputFile.inputStream())
@@ -49,7 +44,6 @@ class TimerFileInput : CliktCommand(name = "input") {
         }
         val mappedInputWriter = when(mappedInputWriter) {
             "println" -> PrintlnTimerOutputWriter<FinishTriggerElapsedTimeOnly>()
-            "coner-core-run" -> ConerCoreRunOutputWriter(buildConerCoreEventsApi(conerCoreServiceUrl!!), conerCoreEventId!!)
             else -> throw IllegalStateException()
         }
         val timer = Timer(
@@ -72,8 +66,6 @@ class TimerCommPortInput : CliktCommand(name = "input") {
     val mapper: String by mapperOption()
     val rawInputLogFile: File by rawInputLogFileArgument()
     val mappedInputWriter: String by mappedInputWriterArgument()
-    val conerCoreServiceUrl by option()
-    val conerCoreEventId by option()
 
     override fun run() {
         val reader = PureJavaCommTimerInputReader(
@@ -89,7 +81,6 @@ class TimerCommPortInput : CliktCommand(name = "input") {
         }
         val mappedInputWriter = when(mappedInputWriter) {
             "println" -> PrintlnTimerOutputWriter<FinishTriggerElapsedTimeOnly>()
-            "coner-core-run" -> ConerCoreRunOutputWriter(buildConerCoreEventsApi(conerCoreServiceUrl!!), conerCoreEventId!!)
             else -> throw IllegalStateException()
         }
         val timer = Timer(
@@ -121,12 +112,6 @@ fun main(args: Array<String>) = Timer()
         )
         .main(args)
 
-private fun buildConerCoreEventsApi(conerCoreServiceUrl: String): EventsApi {
-    val apiClient = ApiClient()
-    apiClient.basePath = conerCoreServiceUrl
-    return EventsApi(apiClient)
-}
-
 private fun <RTI, I> runTimer(timer: Timer<RTI, I>) {
     TermUi.echo("Starting timer... ", trailingNewline = false)
     timer.start()
@@ -148,4 +133,6 @@ private fun CliktCommand.mapperOption() = option()
         .choice("jacircuits")
         .default("jacircuits")
 
-private fun CliktCommand.mappedInputWriterArgument() = argument().choice("println", "coner-core-run")
+private fun CliktCommand.mappedInputWriterArgument() = argument().choice(
+        "println"
+)
