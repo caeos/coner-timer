@@ -37,7 +37,7 @@ class JACTimerInputMapperTest {
 
         try {
             reader.map(rawTimerInput)
-            failBecauseExceptionWasNotThrown(MappingException::class.java)
+            failBecauseExceptionWasNotThrown<MappingException>(MappingException::class.java)
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(MappingException::class.java)
         }

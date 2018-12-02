@@ -39,7 +39,7 @@ class TimerInputReaderControllerTest {
 
         try {
             controller.start()
-            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+            failBecauseExceptionWasNotThrown<IllegalArgumentException>(IllegalArgumentException::class.java)
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
         }
@@ -51,7 +51,7 @@ class TimerInputReaderControllerTest {
 
         try {
             controller.start()
-            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+            failBecauseExceptionWasNotThrown<IllegalArgumentException>(IllegalArgumentException::class.java)
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
         }
@@ -72,7 +72,7 @@ class TimerInputReaderControllerTest {
     fun whenReadFromStoppedItShouldThrow() {
         try {
             controller.read()
-            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+            failBecauseExceptionWasNotThrown<IllegalArgumentException>(IllegalArgumentException::class.java)
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
         }
@@ -94,7 +94,7 @@ class TimerInputReaderControllerTest {
     fun whenStopFromStoppedItShouldThrow() {
         try {
             controller.stop()
-            failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+            failBecauseExceptionWasNotThrown<IllegalArgumentException>(IllegalArgumentException::class.java)
         } catch (t: Throwable) {
             assertThat(t).isInstanceOf(IllegalArgumentException::class.java)
         }

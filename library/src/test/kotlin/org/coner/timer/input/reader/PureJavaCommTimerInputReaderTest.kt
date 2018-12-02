@@ -46,11 +46,6 @@ class PureJavaCommTimerInputReaderTest {
         reader = PureJavaCommTimerInputReader(pureJavaComm, appName, port)
     }
 
-    @After
-    fun after() {
-
-    }
-
     @Test
     fun itShouldStartWhenPortOpensSuccessfully() {
         reader.onStart()
@@ -77,12 +72,6 @@ class PureJavaCommTimerInputReaderTest {
         reader.onStop()
 
         verify { commPort.close() }
-        try {
-            reader.read()
-            failBecauseExceptionWasNotThrown(IOException::class.java)
-        } catch (t: Throwable) {
-            assertThat(t).isInstanceOf(IOException::class.java)
-        }
     }
 
 }

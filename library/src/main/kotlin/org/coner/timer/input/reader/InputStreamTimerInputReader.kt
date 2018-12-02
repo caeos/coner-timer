@@ -1,6 +1,7 @@
 package org.coner.timer.input.reader
 
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStream
 
 class InputStreamTimerInputReader(val inputStream: InputStream) : TimerInputReader<String> {
@@ -12,7 +13,11 @@ class InputStreamTimerInputReader(val inputStream: InputStream) : TimerInputRead
     }
 
     override fun read(): String? {
-        return buffer.readLine()
+        return try {
+            buffer.readLine()
+        } catch (ioException: IOException) {
+            null
+        }
     }
 
     override fun onStop() {

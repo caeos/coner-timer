@@ -14,14 +14,13 @@
     </modules>
 
     <properties>
-        <coner-core.version>0.1.25</coner-core.version>
-        <kotlin.version>1.2.60</kotlin.version>
+        <kotlin.version>1.3.10</kotlin.version>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
-        <kotlin-logging.version>1.5.4</kotlin-logging.version>
+        <kotlin-logging.version>1.6.22</kotlin-logging.version>
         <slf4j.version>1.7.25</slf4j.version>
         <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
-        <mockk.version>1.8.6</mockk.version>
-        <assertj.version>3.10.0</assertj.version>
+        <mockk.version>1.8.13.kotlin13</mockk.version>
+        <assertj.version>3.11.1</assertj.version>
     </properties>
 
     <repositories>
