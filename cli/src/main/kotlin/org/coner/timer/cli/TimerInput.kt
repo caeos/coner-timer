@@ -1,6 +1,5 @@
 package org.coner.timer.cli
 
-import com.fazecast.jSerialComm.SerialPort
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.output.TermUi
@@ -14,14 +13,12 @@ import org.coner.core.client.api.EventsApi
 import org.coner.timer.Timer
 import org.coner.timer.input.mapper.JACTimerInputMapper
 import org.coner.timer.input.reader.InputStreamTimerInputReader
-import org.coner.timer.input.reader.JSerialCommTimerInputReader
 import org.coner.timer.input.reader.PureJavaCommTimerInputReader
 import org.coner.timer.input.reader.TimerInputReaderController
 import org.coner.timer.model.FinishTriggerElapsedTimeOnly
 import org.coner.timer.output.ConerCoreRunOutputWriter
 import org.coner.timer.output.FileAppendingOutputWriter
 import org.coner.timer.output.PrintlnTimerOutputWriter
-import org.coner.timer.util.JSerialCommWrapper
 import org.coner.timer.util.PureJavaCommWrapper
 import purejavacomm.CommPortIdentifier
 import java.io.File
@@ -70,7 +67,6 @@ class TimerCommPort : CliktCommand(name = "comm-port") {
 }
 
 class TimerCommPortInput : CliktCommand(name = "input") {
-    val serialPortLibrary: String by serialPortLibraryOption()
     val portName: String by argument()
             .choice(*CommPortIdentifier.getPortIdentifiers().toList().map { it.name }.toTypedArray())
     val mapper: String by mapperOption()
@@ -80,18 +76,11 @@ class TimerCommPortInput : CliktCommand(name = "input") {
     val conerCoreEventId by option()
 
     override fun run() {
-        val reader = when (serialPortLibrary) {
-            "purejavacomm" -> PureJavaCommTimerInputReader(
+        val reader = PureJavaCommTimerInputReader(
                     pureJavaComm = PureJavaCommWrapper(),
                     appName = "coner-timer-cli",
                     port = portName
-            )
-            "jserialcomm" -> JSerialCommTimerInputReader(
-                    jSerialComm = JSerialCommWrapper(),
-                    port = portName
-            )
-            else -> throw IllegalStateException()
-        }
+        )
         val readerController = TimerInputReaderController(reader = reader)
         val rawInputWriter = FileAppendingOutputWriter(rawInputLogFile)
         val mapper = when (mapper) {
@@ -114,26 +103,11 @@ class TimerCommPortInput : CliktCommand(name = "input") {
 }
 
 class TimerCommPortList : CliktCommand(name = "list") {
-    val serialPortLibrary: String by serialPortLibraryOption()
 
     override fun run() {
-        when (serialPortLibrary) {
-            "purejavacomm" -> usePureJavaComm()
-            "jserialcomm" -> useJSerialComm()
-        }
-    }
-
-    private fun usePureJavaComm() {
         val ports = CommPortIdentifier.getPortIdentifiers().toList().sortedBy(CommPortIdentifier::getName)
         for (port in ports) {
             TermUi.echo("Comm port: { name: ${port.name}  }")
-        }
-    }
-
-    private fun useJSerialComm() {
-        val ports = SerialPort.getCommPorts()
-        for (port in ports) {
-            TermUi.echo("Comm port: { systemPortName: ${port.systemPortName}, descriptivePortName: ${port.descriptivePortName}, portDescription: ${port.portDescription}}")
         }
     }
 }
@@ -175,7 +149,3 @@ private fun CliktCommand.mapperOption() = option()
         .default("jacircuits")
 
 private fun CliktCommand.mappedInputWriterArgument() = argument().choice("println", "coner-core-run")
-
-private fun CliktCommand.serialPortLibraryOption() = option("--serial-port-library", "-l")
-            .choice("purejavacomm", "jserialcomm")
-            .default("purejavacomm")
