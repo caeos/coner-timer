@@ -78,6 +78,12 @@
         </profile>
     </profiles>
 
+
+    <scm>
+        <developerConnection>scm:git:git@github.com:caeos/coner-timer.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
     <distributionManagement>
         <repository>
             <id>bintray-caeos-coner-timer</id>
