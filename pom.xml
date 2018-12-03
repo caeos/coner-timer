@@ -78,4 +78,12 @@
         </profile>
     </profiles>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-caeos-coner-timer</id>
+            <name>caeos-coner-timer</name>
+            <url>https://api.bintray.com/maven/caeos/coner-timer/coner-timer/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
 </project>
