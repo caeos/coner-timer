@@ -10,7 +10,7 @@
     <artifactId>coner-timer-cli</artifactId>
 
     <properties>
-        <clikt.version>1.6.0</clikt.version>
+        <clikt.version>2.7.1</clikt.version>
     </properties>
 
     <dependencies>

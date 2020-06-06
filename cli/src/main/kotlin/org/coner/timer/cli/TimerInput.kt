@@ -29,7 +29,7 @@ class TimerFile : CliktCommand(name = "file") {
 }
 
 class TimerFileInput : CliktCommand(name = "input") {
-    val inputFile: File by argument().file(exists = true, readable = true, folderOkay = false)
+    val inputFile: File by argument().file(mustExist = true, canBeDir = false, mustBeReadable = true)
     val mapper: String by mapperOption()
     val rawInputLogFile: File by rawInputLogFileArgument()
     val mappedInputWriter: String by mappedInputWriterArgument()
@@ -124,9 +124,9 @@ private fun <RTI, I> runTimer(timer: Timer<RTI, I>) {
 }
 
 private fun CliktCommand.rawInputLogFileArgument() = argument().file(
-        exists = true,
-        folderOkay = false,
-        writable = true
+        mustExist = true,
+        canBeDir = false,
+        mustBeWritable = true
 )
 
 private fun CliktCommand.mapperOption() = option()
