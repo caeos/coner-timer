@@ -11,9 +11,11 @@
 
     <properties>
         <clikt.version>2.7.1</clikt.version>
+        <maven-shade-plugin.version>3.2.4</maven-shade-plugin.version>
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>org.coner</groupId>
             <artifactId>coner-timer-library</artifactId>
@@ -70,6 +72,7 @@
                                     <mainClass>org.coner.timer.cli.TimerInputKt</mainClass>
                                 </transformer>
                             </transformers>
+                            <minimizeJar>true</minimizeJar>
                         </configuration>
                     </execution>
                 </executions>

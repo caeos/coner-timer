@@ -16,7 +16,6 @@
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
         <kotlin-logging.version>1.7.9</kotlin-logging.version>
         <slf4j.version>1.7.30</slf4j.version>
-        <maven-shade-plugin.version>3.1.1</maven-shade-plugin.version>
         <mockk.version>1.10.0</mockk.version>
         <assertj.version>3.16.1</assertj.version>
     </properties>
