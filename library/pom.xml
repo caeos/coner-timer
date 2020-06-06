@@ -11,7 +11,6 @@
 
     <properties>
         <purejavacomm.version>1.0.2.RELEASE</purejavacomm.version>
-        <jserialcomm.version>2.0.3</jserialcomm.version>
     </properties>
 
     <dependencies>
