@@ -1,16 +1,14 @@
 # coner-timer
 
-A library for interfacing with hardware timers
+Capture times from hardware timers
 
 [![Build Status](https://travis-ci.org/caeos/coner-timer.svg?branch=master)](https://travis-ci.org/caeos/coner-timer)
 [![codecov](https://codecov.io/gh/caeos/coner-timer/branch/master/graph/badge.svg)](https://codecov.io/gh/caeos/coner-timer)
 
 ## Library
 
-The library provides the tools your application needs to capture times from hardware timers.
-
 - Capture times from hardware timers connected by USB/serial port
-- Supports JACircuits encoded times
+- Supports JACircuits time encoding
 
 ### Usage:
 
