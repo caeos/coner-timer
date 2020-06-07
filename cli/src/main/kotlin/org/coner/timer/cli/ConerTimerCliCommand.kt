@@ -16,7 +16,7 @@ fun main(args: Array<String>) = ConerTimerCliCommand()
         )
         .main(args)
 
-class ConerTimerCliCommand : CliktCommand() {
+class ConerTimerCliCommand : CliktCommand(name = "coner-timer-cli") {
     override fun run() = Unit
 }
 
