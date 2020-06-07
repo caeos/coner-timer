@@ -3,10 +3,7 @@ package org.coner.timer.cli
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.output.TermUi
-import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.versionOption
-import com.github.ajalt.clikt.parameters.types.file
-import com.sun.org.apache.xpath.internal.operations.Bool
 import org.coner.timer.Timer
 
 fun factory() = ConerTimerCliApplication()
