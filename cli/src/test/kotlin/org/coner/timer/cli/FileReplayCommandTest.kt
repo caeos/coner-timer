@@ -6,12 +6,9 @@ import assertk.assertions.containsExactly
 import assertk.assertions.messageContains
 import com.github.ajalt.clikt.core.BadParameterValue
 import com.github.ajalt.clikt.core.CliktCommand
-import com.github.ajalt.clikt.output.TermUi
 import org.awaitility.Awaitility
-import org.awaitility.kotlin.until
 import org.junit.jupiter.api.*
 import java.io.ByteArrayOutputStream
-import java.io.File
 import java.io.PrintStream
 import java.util.*
 
