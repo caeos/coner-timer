@@ -37,7 +37,7 @@ class FileReplayCommandTest {
             app.parse(listOf(
                     "file",
                     "replay",
-                    "src/test/resources/org/coner/timer/cli/raw-input.log"
+                    "src/test/resources/org/coner/timer/cli/raw-input-log"
             ))
             Awaitility.await().until { output.toString().lines().size >= 4 }
         }
