@@ -9,14 +9,15 @@ import com.github.ajalt.clikt.parameters.types.file
 import com.sun.org.apache.xpath.internal.operations.Bool
 import org.coner.timer.Timer
 
-fun main(args: Array<String>) = ConerTimerCliApplication()
+fun factory() = ConerTimerCliApplication()
         .subcommands(
                 FileCommand()
                         .subcommands(FileReplayCommand()),
                 PortCommand()
                         .subcommands(PortListCommand(), PortCaptureCommand())
         )
-        .main(args)
+
+fun main(args: Array<String>) = factory().main(args)
 
 class ConerTimerCliApplication : CliktCommand(name = "coner-timer-cli") {
 
