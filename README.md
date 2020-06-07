@@ -44,7 +44,7 @@ timer.stop()
 
 ## CLI
 
-A simple reference app for capturing times with the Coner Timer library.
+A functional reference app demonstrating time capture with the Coner Timer library.
 
 ### Build and run
 
