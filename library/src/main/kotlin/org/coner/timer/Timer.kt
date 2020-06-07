@@ -10,11 +10,13 @@ class Timer<RTI, I>(
         val controller: TimerInputReaderController<RTI>,
         val rawInputWriter: TimerOutputWriter<RTI>? = null,
         val mapper: TimerInputMapper<RTI, out I>,
-        val mappedInputWriter: TimerOutputWriter<I>
+        val mappedInputWriter: TimerOutputWriter<I>,
+        private val continueOnNull: Boolean = true
 ) {
 
     private val started = AtomicBoolean(false)
     private var loop: Thread? = null
+    val looping: Boolean get() = started.get()
 
     fun start() {
         synchronized(this) {
@@ -28,7 +30,13 @@ class Timer<RTI, I>(
     private fun loop() {
         while (started.get()) {
             try {
-                val rawTimerInput = controller.read() ?: continue
+                val rawTimerInput = controller.read()
+                        ?: if (!continueOnNull) {
+                            stop()
+                            return
+                        } else {
+                            continue
+                        }
                 rawInputWriter?.write(rawTimerInput)
                 val mappedInput = mapper.map(rawTimerInput) ?: continue
                 mappedInputWriter.write(mappedInput)
