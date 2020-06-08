@@ -2,6 +2,8 @@ dist: bionic
 
 language: java
 
+install: skip
+
 jdk:
   - openjdk8
   - openjdk11 # https://github.com/caeos/coner-timer/issues/4
