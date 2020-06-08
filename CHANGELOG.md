@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.2 (pending)
+## 0.1.2 (2020-06-07)
 
 - Supports Java 11+
 - Timer can stop when finding blank line to support log replay
